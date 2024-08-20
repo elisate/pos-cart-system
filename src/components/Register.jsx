@@ -35,7 +35,7 @@ const Register = ({ handlereg }) => {
 
       // Save the token in localStorage
       localStorage.setItem("userToken", JSON.stringify(res.data));
-
+ handlereg(false)
       // Show success message
       Notify.success("Registration successful!");
 

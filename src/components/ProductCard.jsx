@@ -78,11 +78,11 @@ const ProductCard = () => {
               <button className="flex items-center bg-[#093A3E] text-white px-3 py-1 rounded-full hover:bg-opacity-90 focus:outline-none">
                 <FaEye className="mr-2" /> View
               </button>
-              <Link to="/cart">
+             
                 <button className="flex items-center bg-[#093A3E] text-white px-3 py-1 rounded-full hover:bg-opacity-90 focus:outline-none">
                   <FaCartPlus className="mr-2" /> Add to Cart
                 </button>
-              </Link>
+            
             </div>
           </div>
         ))}

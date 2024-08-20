@@ -2,7 +2,7 @@ import React from "react";
 import { FaTimes, FaMinus, FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const ShoppingCart = ({handlecart}) => {
+const ShoppingCart = ({ handlecart }) => {
   const cartItems = [
     {
       id: 1,
@@ -18,29 +18,15 @@ const ShoppingCart = ({handlecart}) => {
       unitPrice: 4000,
       quantity: 1,
     },
-    {
-      id: 2,
-      image: "/prod2.PNG",
-      name: "Organic Green Cabbage",
-      unitPrice: 4000,
-      quantity: 1,
-    },
-    {
-      id: 2,
-      image: "/prod2.PNG",
-      name: "Organic Green Cabbage",
-      unitPrice: 4000,
-      quantity: 1,
-    },
-    // Add more items as needed
+    // Remove duplicate items for clarity
   ];
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50">
       <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg h-[90vh] flex flex-col overflow-hidden">
         {/* Close Button */}
         <button
-        onClick={handlecart}
+          onClick={handlecart}
           className="absolute top-4 right-4 text-gray-700 hover:text-gray-900 text-2xl"
         >
           <FaTimes />

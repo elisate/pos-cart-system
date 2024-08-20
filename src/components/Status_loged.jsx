@@ -60,6 +60,7 @@ const Status_loged = () => {
             src="profile.png"
             alt="Profile"
             className="w-9 h-9 rounded-full border-2 border-gray-300"
+            onClick={Logout}
           />
         </div>
       </div>

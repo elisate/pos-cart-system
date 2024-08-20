@@ -8,10 +8,10 @@ import { useState } from "react";
 import Register from "./Register";
 
 const SignIn = ({ handlemodal }) => {
-     const [reg, setReg] = useState(false);
-     const handlereg = () => {
-       setReg(!reg);
-     };
+  const [reg, setReg] = useState(false);
+  const handlereg = () => {
+    setReg(!reg);
+  };
 
   const navigate = useNavigate(); // Initialize the useNavigate hook
   const {
@@ -31,8 +31,11 @@ const SignIn = ({ handlemodal }) => {
       localStorage.setItem("userToken", JSON.stringify(res.data));
       Notify.success("Login successful!");
 
+      // Remove the modal
+      handlemodal(false);
+
       // Redirect to another page after successful login
-      navigate("/products"); // Replace '/product' with the desired path
+      navigate("/products"); // Replace '/products' with the desired path
     } catch (error) {
       console.log(error);
       Notify.failure("Login failed. Please check your credentials.");
@@ -41,7 +44,7 @@ const SignIn = ({ handlemodal }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      {reg && <Register handlereg={handlereg}/>}
+      {reg && <Register handlereg={handlereg} />}
       <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         {/* Close Button */}
         <button
@@ -103,7 +106,7 @@ const SignIn = ({ handlemodal }) => {
           <p className="text-gray-700">
             Don't have an account?{" "}
             <button
-            onClick={handlereg}
+              onClick={handlereg}
               className="text-[#093A3E] font-bold hover:underline"
             >
               Register here
