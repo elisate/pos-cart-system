@@ -40,7 +40,7 @@ const Register = ({ handlereg }) => {
       Notify.success("Registration successful!");
 
      
-      navigate("/products"); // Replace with the route you want to navigate to
+      navigate("/products"); 
     } catch (error) {
       console.log(error);
       // Show error message
