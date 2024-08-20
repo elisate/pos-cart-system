@@ -2,7 +2,7 @@ import React from "react";
 import { FaTimes, FaMinus, FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const ShoppingCart = ({ handleClose }) => {
+const ShoppingCart = ({handlecart}) => {
   const cartItems = [
     {
       id: 1,
@@ -40,7 +40,7 @@ const ShoppingCart = ({ handleClose }) => {
       <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg h-[90vh] flex flex-col overflow-hidden">
         {/* Close Button */}
         <button
-          onClick={handleClose}
+        onClick={handlecart}
           className="absolute top-4 right-4 text-gray-700 hover:text-gray-900 text-2xl"
         >
           <FaTimes />
