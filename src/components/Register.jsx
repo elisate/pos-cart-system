@@ -39,7 +39,7 @@ const Register = ({ handlereg }) => {
       // Show success message
       Notify.success("Registration successful!");
 
-      // Redirect to a different page after registration
+     
       navigate("/products"); // Replace with the route you want to navigate to
     } catch (error) {
       console.log(error);
