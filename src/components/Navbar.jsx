@@ -14,11 +14,11 @@ const Navbar = () => {
       {modal && <SignIn handlemodal={handlemodal} />}
 
       <div className="container mx-auto flex items-center justify-between">
-        {/* Logo */}
+    
         <Link to="/" className="text-gray-800 text-2xl font-bold">
           <img src="/logo.png" alt="Logo" className="h-8" />
         </Link>
-        
+
 <Status_loged/>
         {/* <button
           className="flex items-center bg-[#093A3E] text-white px-3 py-1 rounded-full hover:bg-opacity-90 focus:outline-none transition duration-300"
