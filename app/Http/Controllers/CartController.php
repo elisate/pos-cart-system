@@ -97,6 +97,31 @@ public function getCartProducts(Request $request)
     ], 200);
 }
 
+public function updateQuantity(Request $request)
+{
+    // Validate the request input
+    $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'product_id' => 'required|exists:products,id',
+        'quantity' => 'required|integer|min:1',
+    ]);
+
+    // Find the user's cart item
+    $cart = Cart::where('user_id', $request->user_id)
+                ->where('product_id', $request->product_id)
+                ->firstOrFail();
+
+    // Update the quantity
+    $cart->quantity = $request->quantity;
+    $cart->save();
+
+    return response()->json([
+        'message' => 'Cart quantity updated successfully!',
+        'cart' => $cart,
+    ], 200);
+}
+
+
 
 
 

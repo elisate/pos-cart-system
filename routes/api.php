@@ -14,8 +14,10 @@ use App\Http\Controllers\CartController;
 Route::group(['middleware' => 'auth:sanctum'], function() {
     // Cart Routes
 Route::post('/cart/add', [CartController::class, 'addProduct']);
-Route::post('/cart/remove', [CartController::class, 'removeProduct']);
+Route::delete('/cart/remove', [CartController::class, 'removeProduct']);
 Route::get('/cart/products', [CartController::class, 'getCartProducts']);
+Route::put('/cart/update-quantity', [CartController::class, 'updateQuantity']);
+
 
     // Cart Item Routes
 
