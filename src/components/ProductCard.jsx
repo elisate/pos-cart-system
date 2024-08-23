@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaCartPlus } from "react-icons/fa";
 import axios from "axios";
+import { Notify } from "notiflix";
 
-const ProductCard = ({ userId }) => {
-  // Accept userId as a prop or get it from context
+const ProductCard = () => {
   const [products, setProducts] = useState([]);
-  const quantity = 1; // Default quantity, can be modified based on user input
+  const quantity = 1;
 
   useEffect(() => {
     const getProducts = async () => {
@@ -20,19 +20,17 @@ const ProductCard = ({ userId }) => {
   }, []);
 
   const addToCart = async (productId) => {
-     const userToken = JSON.parse(localStorage.getItem("userToken"));
-     const passkey = userToken.token;
-     console.log(passkey);
-     const userId=userToken?.user?.id;
-     console.log('USER-ID:',userId);
+    const userToken = JSON.parse(localStorage.getItem("userToken"));
+    const passkey = userToken.token;
+    const userId = userToken?.user?.id;
+
     try {
-      
       await axios.post(
         "http://127.0.0.1:8000/api/cart/add",
         {
           product_id: productId,
           quantity,
-          user_id: userId, // Pass userId here
+          user_id: userId,
         },
         {
           headers: {
@@ -41,10 +39,14 @@ const ProductCard = ({ userId }) => {
           },
         }
       );
-      // Optionally show a notification or update UI here
-      console.log("Product added to cart!");
+
+      Notify.success("Product added to cart!");
+
+      // Reload the page
+      window.location.reload();
     } catch (err) {
       console.log(err.response ? err.response.data : err.message);
+      Notify.failure("Failed to add product to cart.");
     }
   };
 
@@ -53,7 +55,7 @@ const ProductCard = ({ userId }) => {
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Product Category</h1>
         <select className="border rounded-md px-3 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#00B09E]">
-          <option>sugar</option>
+          <option>boillo</option>
         </select>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -63,8 +65,8 @@ const ProductCard = ({ userId }) => {
             className="border rounded-lg overflow-hidden shadow-lg"
           >
             <img
-              src={`http://localhost:8000/storage/${item.image}`} // Corrected URL formatting
-              alt={item.name} // Add alt text for better accessibility
+              src={`http://localhost:8000/storage/${item.image}`}
+              alt={item.name}
               className="w-full h-48 object-cover"
             />
 

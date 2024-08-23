@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ShoppingCart from "./ShoppingCart";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import SignIn from "./SignIn";
-import { useEffect } from "react";
 import axios from "axios";
 
 const Status_loged = () => {
   const [cart, setCart] = useState(false);
   const [modal, setModal] = useState(false);
-  const [cartdata, setCartdata] = useState([]);
+  const [totalQuantity, setTotalQuantity] = useState(0);
 
   // Toggle modal visibility
   const handlemodal = () => {
@@ -19,15 +18,15 @@ const Status_loged = () => {
   const handlecart = () => {
     setCart(!cart);
   };
-  
+
   useEffect(() => {
-    const getCartProducts = async () => {
+    const getTotalQuantity = async () => {
       const userToken = JSON.parse(localStorage.getItem("userToken"));
       const passkey = userToken.token;
       console.log(passkey);
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/cart/products`,
+          `http://localhost:8000/api/cart/total-quantity`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -35,12 +34,12 @@ const Status_loged = () => {
             },
           }
         );
-        setCartdata(response.data.products);
+        setTotalQuantity(response.data.totalQuantity);
       } catch (err) {
         console.log(err.response ? err.response.data : err.message);
       }
     };
-    getCartProducts();
+    getTotalQuantity();
   }, []);
 
   // Fetching userToken from localStorage
@@ -78,7 +77,7 @@ const Status_loged = () => {
             />
 
             <span className="absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center text-white bg-[#093A3E] rounded-full text-xs">
-              {cartdata.length}
+              {totalQuantity}
             </span>
           </div>
           <img
