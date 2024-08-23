@@ -1,28 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaEye, FaCartPlus } from "react-icons/fa";
-import { useEffect } from "react";
 import axios from "axios";
 
-const ProductCard = () => {
-  const[product,setProduct]=useState([]);
- 
+const ProductCard = ({ userId }) => {
+  // Accept userId as a prop or get it from context
+  const [products, setProducts] = useState([]);
+  const quantity = 1; // Default quantity, can be modified based on user input
+
   useEffect(() => {
-    const getproduct = async () => {
+    const getProducts = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/product`);
-        console.log(response.data);
-        setProduct(response.data.products);
-        
+        const response = await axios.get("http://localhost:8000/api/product");
+        setProducts(response.data.products);
       } catch (err) {
-        // console.log(err);
-          console.log(err.response ? err.response.data : err.message);
+        console.log(err.response ? err.response.data : err.message);
       }
     };
-    getproduct();
+    getProducts();
   }, []);
 
-
-  
+  const addToCart = async (productId) => {
+     const userToken = JSON.parse(localStorage.getItem("userToken"));
+     const passkey = userToken.token;
+     console.log(passkey);
+     const userId=userToken?.user?.id;
+     console.log('++++++++++++++++',userId);
+    try {
+      
+      await axios.post(
+        "http://127.0.0.1:8000/api/cart/add",
+        {
+          product_id: productId,
+          quantity,
+          user_id: userId, // Pass userId here
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${passkey}`,
+          },
+        }
+      );
+      // Optionally show a notification or update UI here
+      console.log("Product added to cart!");
+    } catch (err) {
+      console.log(err.response ? err.response.data : err.message);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-20">
@@ -33,7 +57,7 @@ const ProductCard = () => {
         </select>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        {product?.map((item) => (
+        {products?.map((item) => (
           <div
             key={item.id}
             className="border rounded-lg overflow-hidden shadow-lg"
@@ -53,7 +77,10 @@ const ProductCard = () => {
                 <FaEye className="mr-2" /> View
               </button>
 
-              <button className="flex items-center bg-[#093A3E] text-white px-3 py-1 rounded-full hover:bg-opacity-90 focus:outline-none">
+              <button
+                onClick={() => addToCart(item.id)}
+                className="flex items-center bg-[#093A3E] text-white px-3 py-1 rounded-full hover:bg-opacity-90 focus:outline-none"
+              >
                 <FaCartPlus className="mr-2" /> Add to Cart
               </button>
             </div>
