@@ -24,7 +24,7 @@ const ProductCard = ({ userId }) => {
      const passkey = userToken.token;
      console.log(passkey);
      const userId=userToken?.user?.id;
-     console.log('++++++++++++++++',userId);
+     console.log('USER-ID:',userId);
     try {
       
       await axios.post(
