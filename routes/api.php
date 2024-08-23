@@ -17,6 +17,8 @@ Route::post('/cart/add', [CartController::class, 'addProduct']);
 Route::delete('/cart/remove', [CartController::class, 'removeProduct']);
 Route::get('/cart/products', [CartController::class, 'getCartProducts']);
 Route::put('/cart/update-quantity', [CartController::class, 'updateQuantity']);
+Route::get('/cart/total-quantity', [CartController::class, 'getTotalQuantity']);
+
 
 
     // Cart Item Routes

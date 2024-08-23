@@ -121,6 +121,18 @@ public function updateQuantity(Request $request)
     ], 200);
 }
 
+public function getTotalQuantity(Request $request)
+{
+    // Get the authenticated user's ID
+    $user_id = auth()->id();
+
+    // Calculate the total quantity of all items in the cart
+    $totalQuantity = Cart::where('user_id', $user_id)->sum('quantity');
+
+    return response()->json([
+        'totalQuantity' => $totalQuantity,
+    ], 200);
+}
 
 
 
