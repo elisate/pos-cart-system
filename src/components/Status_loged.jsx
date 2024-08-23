@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import ShoppingCart from "./ShoppingCart";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import SignIn from "./SignIn";
+import { useEffect } from "react";
+import axios from "axios";
 
 const Status_loged = () => {
   const [cart, setCart] = useState(false);
   const [modal, setModal] = useState(false);
+  const [cartdata, setCartdata] = useState([]);
 
   // Toggle modal visibility
   const handlemodal = () => {
@@ -17,6 +19,29 @@ const Status_loged = () => {
   const handlecart = () => {
     setCart(!cart);
   };
+  
+  useEffect(() => {
+    const getCartProducts = async () => {
+      const userToken = JSON.parse(localStorage.getItem("userToken"));
+      const passkey = userToken.token;
+      console.log(passkey);
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/cart/products`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${passkey}`,
+            },
+          }
+        );
+        setCartdata(response.data.products);
+      } catch (err) {
+        console.log(err.response ? err.response.data : err.message);
+      }
+    };
+    getCartProducts();
+  }, []);
 
   // Fetching userToken from localStorage
   let userToken = JSON.parse(localStorage.getItem("userToken"));
@@ -53,7 +78,7 @@ const Status_loged = () => {
             />
 
             <span className="absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center text-white bg-[#093A3E] rounded-full text-xs">
-              2
+              {cartdata.length}
             </span>
           </div>
           <img

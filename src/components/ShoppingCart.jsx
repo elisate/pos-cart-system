@@ -1,25 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaTimes, FaMinus, FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const ShoppingCart = ({ handlecart }) => {
-  const cartItems = [
-    {
-      id: 1,
-      image: "/prod1.PNG",
-      name: "Packed Green Beans",
-      unitPrice: 5000,
-      quantity: 2,
-    },
-    {
-      id: 2,
-      image: "/prod2.PNG",
-      name: "Organic Green Cabbage",
-      unitPrice: 4000,
-      quantity: 1,
-    },
-    // Remove duplicate items for clarity
-  ];
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    const getCartProducts = async () => {
+      const userToken = JSON.parse(localStorage.getItem("userToken"));
+      const passkey = userToken.token;
+      console.log(passkey);
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/cart/products`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${passkey}`,
+            },
+          }
+        );
+        setCart(response.data.products);
+      } catch (err) {
+        console.log(err.response ? err.response.data : err.message);
+      }
+    };
+    getCartProducts();
+  }, []);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50">
@@ -42,14 +50,14 @@ const ShoppingCart = ({ handlecart }) => {
         {/* Cart Items */}
         <div className="flex-1 overflow-y-auto mb-4">
           <div className="space-y-4">
-            {cartItems.map((item) => (
+            {cart.map((item) => (
               <div
                 key={item.id}
                 className="border rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105"
               >
                 <div className="flex items-center p-4 border-b">
                   <img
-                    src={item.image}
+                    src={`http://localhost:8000/storage/${item.image}`}
                     alt={item.name}
                     className="w-24 h-24 object-cover rounded"
                   />
@@ -58,7 +66,8 @@ const ShoppingCart = ({ handlecart }) => {
                       {item.name}
                     </h3>
                     <p className="text-gray-500 text-sm">
-                      Unit price: ${item.unitPrice.toFixed(2)}
+                      Unit price: $
+                      {item.price}
                     </p>
                   </div>
                   <div className="flex items-center ml-4">
@@ -66,14 +75,16 @@ const ShoppingCart = ({ handlecart }) => {
                       <FaMinus />
                     </button>
                     <span className="mx-3 text-gray-700 text-base">
-                      {item.quantity}
+                      {item.quantity !== undefined ? item.quantity : 0}
                     </span>
                     <button className="text-[#093A3E] border-2 border-gray-300 rounded-full p-2 text-sm">
                       <FaPlus />
                     </button>
                   </div>
                   <span className="font-semibold text-gray-800 text-base ml-4">
-                    ${(item.unitPrice * item.quantity).toFixed(2)}
+                    $
+                    {(item.unitPrice ? item.unitPrice : 0) *
+                      (item.quantity !== undefined ? item.quantity : 0)}
                   </span>
                 </div>
               </div>
@@ -87,7 +98,7 @@ const ShoppingCart = ({ handlecart }) => {
             <span>Subtotal:</span>
             <span>
               $
-              {cartItems
+              {cart
                 .reduce(
                   (total, item) => total + item.unitPrice * item.quantity,
                   0
