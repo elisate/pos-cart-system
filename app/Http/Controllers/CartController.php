@@ -56,22 +56,48 @@ class CartController extends Controller
     }
 
     // Get only the product details for items in the cart
-    public function getCartProducts(Request $request)
-    {
-        // Validate the request input
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-        ]);
+    // public function getCartProducts(Request $request)
+    // {
+    //     // Validate the request input
+    //     $request->validate([
+    //         'user_id' => 'required|exists:users,id',
+    //     ]);
 
-        // Retrieve the products related to the cart items for the user
-        $products = Cart::where('user_id', $request->user_id)
-                        ->with('product:id,name,description,price,image') // Retrieve only the relevant fields
-                        ->get()
-                        ->pluck('product') // Get only the product details
-                        ->unique('id'); // Ensure products aren't duplicated
+    //     // Retrieve the products related to the cart items for the user
+    //     $products = Cart::where('user_id', $request->user_id)
+    //                     ->with('product:id,name,description,price,image') // Retrieve only the relevant fields
+    //                     ->get()
+    //                     ->pluck('product') // Get only the product details
+    //                     ->unique('id'); // Ensure products aren't duplicated
 
-        return response()->json([
-            'products' => $products,
-        ], 200);
-    }
+    //     return response()->json([
+    //         'products' => $products,
+    //     ], 200);
+    // }
+   // Get only the product details for items in the cart
+public function getCartProducts(Request $request)
+{
+    // Get the authenticated user's ID
+    $user_id = auth()->id();
+
+    // Retrieve the cart items along with the product details and quantity
+    $cartItems = Cart::where('user_id', $user_id)
+                    ->with('product:id,name,description,price,image') // Retrieve only the relevant fields from the product
+                    ->get(['product_id', 'quantity']); // Also retrieve the quantity from the cart
+
+    // Prepare the response by merging product details with the quantity
+    $products = $cartItems->map(function ($cartItem) {
+        $product = $cartItem->product;
+        $product->quantity = $cartItem->quantity; // Add the quantity from the cart to the product details
+        return $product;
+    });
+
+    return response()->json([
+        'products' => $products->unique('id'), // Ensure products aren't duplicated
+    ], 200);
+}
+
+
+
+
 }
