@@ -10,7 +10,6 @@ const ShoppingCart = ({ handlecart }) => {
     const getCartProducts = async () => {
       const userToken = JSON.parse(localStorage.getItem("userToken"));
       const passkey = userToken.token;
-      console.log(passkey);
       try {
         const response = await axios.get(
           `http://localhost:8000/api/cart/products`,
@@ -28,6 +27,26 @@ const ShoppingCart = ({ handlecart }) => {
     };
     getCartProducts();
   }, []);
+
+  const increaseQuantity = (itemId) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === itemId
+          ? { ...item, quantity: (item.quantity || 0) + 1 }
+          : item
+      )
+    );
+  };
+
+  const decreaseQuantity = (itemId) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === itemId && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50">
@@ -66,24 +85,29 @@ const ShoppingCart = ({ handlecart }) => {
                       {item.name}
                     </h3>
                     <p className="text-gray-500 text-sm">
-                      Unit price: $
-                      {item.price}
+                      Unit price: ${item.price || 0}
                     </p>
                   </div>
                   <div className="flex items-center ml-4">
-                    <button className="text-[#093A3E] border-2 border-gray-300 rounded-full p-2 text-sm">
+                    <button
+                      className="text-[#093A3E] border-2 border-gray-300 rounded-full p-2 text-sm"
+                      onClick={() => decreaseQuantity(item.id)}
+                    >
                       <FaMinus />
                     </button>
                     <span className="mx-3 text-gray-700 text-base">
                       {item.quantity !== undefined ? item.quantity : 0}
                     </span>
-                    <button className="text-[#093A3E] border-2 border-gray-300 rounded-full p-2 text-sm">
+                    <button
+                      className="text-[#093A3E] border-2 border-gray-300 rounded-full p-2 text-sm"
+                      onClick={() => increaseQuantity(item.id)}
+                    >
                       <FaPlus />
                     </button>
                   </div>
                   <span className="font-semibold text-gray-800 text-base ml-4">
                     $
-                    {(item.unitPrice ? item.unitPrice : 0) *
+                    {(item.price || 0) *
                       (item.quantity !== undefined ? item.quantity : 0)}
                   </span>
                 </div>
@@ -100,7 +124,10 @@ const ShoppingCart = ({ handlecart }) => {
               $
               {cart
                 .reduce(
-                  (total, item) => total + item.unitPrice * item.quantity,
+                  (total, item) =>
+                    total +
+                    (item.price || 0) *
+                      (item.quantity !== undefined ? item.quantity : 0),
                   0
                 )
                 .toFixed(2)}
